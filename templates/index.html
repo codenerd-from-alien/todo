@@ -1,12 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Gamja+Flower&family=Nanum+Gothic+Coding&family=Nanum+Pen+Script&family=Noto+Sans+KR&family=Song+Myung&display=swap"
+        rel="stylesheet">
+
+    <title>TODO LIST PAGE</title>
+    <style>
+        .top {
+            width: 100%;
+            height: 450px;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .top>img {
+            height: 400px;
+            width: 450px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            font-weight: bold;
+            font-family: 'Bad Script', cursive;
+            color: rgb(196, 151, 197);
+
+        }
+
+        .btn-r {
+            width: 100px;
+            height: 38px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 5px 0px rgb(131, 176, 248);
+            background-color: #fff;
+            border: 0px;
+            font-weight: bold;
+            color: #727272;
+        }
+
+        .btn-r:hover {
+            background-color: rgb(201, 219, 247);
+            color: #444;
+        }
+
+        .btn-c {
+            width: 40px;
+            height: 40px;
+            border-radius: 50px;
+            box-shadow: 0px 0px 5px 0px rgb(131, 176, 248);
+            background-color: #fff;
+            border: 0px;
+            font-weight: bold;
+            color: #727272;
+            margin-right: 10px;
+            font-size: 13px;
+        }
+
+        .btn-c:hover {
+            background-color: rgb(201, 219, 247);
+            color: #444;
+        }
+
+        .mybox {
+            width: 95%;
+            max-width: 700px;
+            padding: 20px;
+            box-shadow: 0px 0px 5px 0px rgb(97, 151, 240);
+            margin: 20px auto;
+        }
+
+        .mybucket {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mybucket>input {
+            width: 70%;
+        }
+
+        .mybox>li {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 10px;
+            min-height: 48px;
+        }
+
+        .mybox>li>h2 {
+            max-width: 75%;
+            font-size: 20px;
+            font-weight: 500;
+            margin-right: auto;
+            margin-bottom: 0px;
+        }
+
+        .mybox>li>h2.done {
+            text-decoration: line-through;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            show_todolist();
+        });
+
+        function show_todolist() {
+            // $('#todo-list').empty()
+            // 유저별 메모사항 나오게 수정 필요
+            $.ajax({
+                type: "GET",
+                url: "/todo-list",
+                data: {},
+                success: function (result) {
+                    let rows = result['result']
+                    for (let i = 0; i < rows.length; i++) {
+                        let todo_id = rows[i]['id']
+                        // let user_id = rows[i]['user_id']
+                        let todo_status = rows[i]['status']
+                        let todo_context = rows[i]['context']
+
+                        let temp_html = ``
+
+                        if (todo_status == 0) {
+
+                        }
+
+
+
+                        temp_html = `  <li>
+                                                <h2>${todo_context}</h2>
+                                                <button onclick="done_bucket()" type="button" class="btn-c">✔️</button>
+                                                <button onclick="done_bucket2()" type="button" class="btn-c">✏️</button>
+                                                <button onclick="delete_btn(${todo_id})" type="button" class="btn-c">❌</button>
+                                            </li>`
+                        $('#todo-list').append(temp_html)
+                    }
+                }
+            });
+        }
+
+        function save_btn() {
+            let todo = $('#todo').val()
+            $.ajax({
+                type: "POST",
+                url: "/todo-list",
+                data: { context_give: todo },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
+
+        function delete_btn(a) {
+            let id = a
+            $.ajax({
+                type: "POST",
+                url: "/todo-list/delete",
+                data: { id_give: id },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+    </script>
 </head>
+
 <body>
-    
+    <h1>To Do List</h1>
+    <div class="top">
+        <img
+            src="https://r1.community.samsung.com/t5/image/serverpage/image-id/141368i8F105F6B57DB0E3D/image-size/large?v=v2&px=999">
+    </div>
+    <div class="mybox">
+        <div class="mybucket">
+            <input id="todo" class="form-control" type="text" placeholder="to do list" />
+            <button onclick="save_btn()" type="button" class="btn-r">기록하기</button>
+        </div>
+    </div>
+    <div class="mybox" id="todo-list">
+        <li>
+            <h2>✔️ 호주에서 스카이다이빙 하기</h2>
+            <button onclick="done_bucket()" type="button" class="btn-c">✔️</button>
+            <button onclick="done_bucket2()" type="button" class="btn-c">✏️</button>
+            <button onclick="delete_btn()" type="button" class="btn-c">❌</button>
+        </li>
+    </div>
 </body>
+
 </html>
