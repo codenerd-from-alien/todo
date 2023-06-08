@@ -119,6 +119,14 @@
         .mybox>li>h2.done {
             text-decoration: line-through;
         }
+
+        .update {
+            max-width: 75%;
+            font-size: 20px;
+            font-weight: 500;
+            margin-right: auto;
+            margin-bottom: 0px;
+        }
     </style>
     <script>
         $(document).ready(function () {
@@ -135,29 +143,26 @@
             });
         }
 
-        function done_bucket2(bucket) {
-                
-        }
-
         function show_bucket() {
             fetch('/bucket').then(res => res.json()).then(data => {
                 let rows = data['result']
                 $('#bucket-list').empty()
                 rows.forEach((a) => {
                     let bucket = a['bucket']
+                    let num = a['num']
                     let temp_html
+                    console.log('test : ' + a['done'])
                     if (a['done'] == 0) {
                         temp_html = `<li>
-                                        <h2>◻️ ${bucket}</h2>
-                                        <button onclick="done_bucket()" type="button" class="btn-c">✔️</button>
-                                        <button onclick="done_bucket2()" type="button" class="btn-c">✏️</button>
+                                        <h2 id="${num}">◻️ ${bucket}</h2>
+                                        <button onclick="done_bucket(\'${a['bucket']}'\)" type="button" class="btn-c">✔️</button>
+                                        <button onclick="done_bucket2(\'${a['num']}'\)" type="button" class="btn-c">✏️</button>
                                         <button onclick="done_bucket3()" type="button" class="btn-c">❌</button>
                                     </li>`
                     } else {
                         temp_html = `<li>
-                                        <h2>✔️${bucket}</h2>
-                                        <button onclick="done_bucket()" type="button" class="btn-c">✔️</button>
-                                        <button onclick="done_bucket2()" type="button" class="btn-c">✏️</button>
+                                        <h2 id="${num}">✔️${bucket}</h2>
+                                        <button onclick="done_bucket2(\'${a['num']}'\)" type="button" class="btn-c">✏️</button>
                                         <button onclick="done_bucket3()" type="button" class="btn-c">❌</button>
                                     </li>`
                     }
@@ -165,6 +170,45 @@
                     $('#bucket-list').append(temp_html)
                 })
             })
+        }
+
+        var check = true
+
+        function done_bucket2(num) {
+            console.log(num)
+            if (check) {
+                var inputDocumnet = document.createElement("input")
+                inputDocumnet.setAttribute("placeholder", '수정을 해주세요.')
+                inputDocumnet.className = 'update'
+                inputDocumnet.id = num
+                $('#' + num).replaceWith(inputDocumnet)
+
+                console.log(num)
+                check = false
+            } else {
+                var inputDocumnet = document.createElement("h2")
+                inputDocumnet.id = num
+                //DB 넣고 windows.loacation.reload()
+
+                let formData = new FormData();
+                formData.append("num_give", num);
+                formData.append("bucket_give", $('#' + num).val());
+                /*
+                    {
+                        "num_give" : num
+                        "bucket_give" : bucket
+                    }
+                */
+                fetch('/ddd', { method: "POST", body: formData, }).then((response) => response.json()).then((data) => {
+                    window.location.reload()
+                });
+
+                inputDocumnet.textContent = '◻️' + $('#' + num).val()
+                $('#' + num).replaceWith(inputDocumnet)
+                alert('수정이 완료되었습니다.')
+                check = true
+            }
+
         }
 
         function save_bucket() {
@@ -178,6 +222,8 @@
                 window.location.reload();
             });
         }
+
+
     </script>
 </head>
 
@@ -212,13 +258,6 @@
             <button onclick="done_bucket2()" type="button" class="btn-c">✏️</button>
             <button onclick="done_bucket3()" type="button" class="btn-c">❌</button>
         </li>
-        <li>
-            <h2>◻️ 호주에서 스카이다이빙 하기</h2>
-            <button onclick="done_bucket()" type="button" class="btn-c">완료</button>
-            <button onclick="done_bucket2()" type="button" class="btn-c">수정</button>
-            <button onclick="done_bucket3()" type="button" class="btn-c">취소</button>
-        </li>
-
     </div>
 </body>
 
