@@ -41,6 +41,12 @@ def todo_post():
     
     return jsonify({'msg': '저장완료!'})
 
+# UPDATE문
+@application.route("/todo-list/done", methods=["POST"])
+def todo_done():
+    num_receive = request.form['num_give']
+    db.todo.update_one({'num': int(num_receive)}, {'$set': {'done': 1}})
+    return jsonify({'msg': '버킷 완료!'})
 
 # 유저별 GET
 @application.route("/todo-list", methods=["GET"])

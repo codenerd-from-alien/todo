@@ -137,9 +137,18 @@
                     for (let i = 0; i < rows.length; i++) {
                         let todo_id = rows[i]['id']
                         // let user_id = rows[i]['user_id']
-                        // let todo_status = rows[i]['status']
+                        let todo_status = rows[i]['status']
                         let todo_context = rows[i]['context']
-                        let temp_html = `  <li>
+
+                        let temp_html = ``
+
+                        if (todo_status == 0) {
+
+                        }
+
+
+
+                        temp_html = `  <li>
                                                 <h2>${todo_context}</h2>
                                                 <button onclick="done_bucket()" type="button" class="btn-c">✔️</button>
                                                 <button onclick="done_bucket2()" type="button" class="btn-c">✏️</button>
