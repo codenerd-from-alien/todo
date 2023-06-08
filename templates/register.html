@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>register</title>
+  </head>
+  <style>
+    .register-box {
+      margin-left: 50%;
+      margin-top: 30%;
+      border: 2px solid black;
+      width: 200px;
+    }
+    .register-box {
+      display: flex;
+      flex-direction: column;
+    }
+    .register-box > h2 {
+      font-size: 40px;
+      text-align: center;
+      font-size: 3px;
+    }
+    .page_move {
+      margin-left: 50%;
+      margin-top: 10%;
+      border: 2px solid black;
+      width: 200px;
+      text-align: center;
+    }
+  </style>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+    } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+    import {
+      getDatabase,
+      set,
+      ref,
+    } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+    //db 세팅 set ref 설정
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic3eaapyraJxGy8oymMx_8-R5jpCMLkg",
+      authDomain: "auth-de8f1.firebaseapp.com",
+      projectId: "auth-de8f1",
+      storageBucket: "auth-de8f1.appspot.com",
+      messagingSenderId: "68557545822",
+      appId: "1:68557545822:web:da99c4693ca0f7de962fcf",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const database = getDatabase(app);
+
+    let registercall = document.querySelector("#registerbtn");
+    registercall.addEventListener("click", (element) => {
+      let email = document.getElementById("register-email").value;
+      let password = document.getElementById("register-password").value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          // ...
+          set(ref(database, "users/" + user.uid), {
+            //uid 유니크 아이디
+            email: email,
+            password: password,
+          }) //email, password 가져옴
+            .then(() => {
+              // Data saved successfully!
+              alert("db 생성 완료");
+            })
+            .catch((error) => {
+              // The write failed...
+              alert(error);
+            });
+          alert("회원가입 성공");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert(errorMessage + " 회원가입 실패");
+        });
+    });
+  </script>
+  <body>
+    <div class="register-box" id="register-box">
+      <h2>가입</h2>
+      <input
+        type="text"
+        id="register-email"
+        name="이메일 로그인"
+        placeholder="Email"
+      /><br />
+      <input
+        id="register-password"
+        name="login-password"
+        placeholder="Password"
+        type="password"
+      /><br />
+      <button id="registerbtn" style="cursor: pointer">가입</button>
+    </div>
+    <div class="page_move">
+      <p style="cursor: pointer"><a href="login.html">로그인 하러가기</a></p>
+    </div>
+  </body>
+</html>

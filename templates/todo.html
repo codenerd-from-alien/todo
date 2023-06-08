@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>main page</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  </head>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    //import { getDatabase } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import {
+      getAuth,
+      signOut,
+    } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+    import {
+      getDatabase,
+      set,
+      ref,
+      update,
+    } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic3eaapyraJxGy8oymMx_8-R5jpCMLkg",
+      authDomain: "auth-de8f1.firebaseapp.com",
+      projectId: "auth-de8f1",
+      storageBucket: "auth-de8f1.appspot.com",
+      messagingSenderId: "68557545822",
+      appId: "1:68557545822:web:da99c4693ca0f7de962fcf",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let logoutcall = document.querySelector("#logout-btn");
+    logoutcall.addEventListener("click", () => {
+      signOut(auth)
+        .then(() => {
+          // Sign-out successful.
+          window.location.href = "login.html";
+        })
+        .catch((error) => {
+          // An error happened.
+          alert(error);
+        });
+    });
+  </script>
+  <style>
+    .log_out {
+      color: blue;
+    }
+  </style>
+  <body>
+    <p>todo page</p>
+    <p class="log_out" style="cursor: pointer" id="logout-btn">로그아웃</p>
+  </body>
+</html>
